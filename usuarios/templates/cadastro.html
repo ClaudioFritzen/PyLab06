@@ -1,7 +1,8 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block 'head' %}
-    
+
+<link href="{% static 'usuarios/css/usuarios.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block 'body' %}
@@ -13,7 +14,8 @@
                 <h3 class="logo">Type.Event</h3>
 
                 
-
+                {% include "partials/usuarios/cadastro.html" %}
+                
                 <img src="{% static 'geral/img/logo_evento.png' %}" class="logo-evento">
 
             </div>
