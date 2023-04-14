@@ -53,6 +53,12 @@ def novo_evento(request):
 
 def gerenciar_evento(request):
     if request.method == "GET":
+
+        ## fazendo o filtro
+        nome_filtro = request.GET.get('nome')
         eventos = Evento.objects.filter(criador=request.user)
+
+        if nome_filtro:
+            eventos = eventos.filter(nome__contains=nome_filtro)
         print(eventos)
         return render(request, 'gerenciar_evento.html', {'eventos':eventos})
