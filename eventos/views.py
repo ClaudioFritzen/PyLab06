@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 
 from django.urls import reverse
 
@@ -50,7 +50,7 @@ def novo_evento(request):
         return redirect(reverse('novo_evento'))
 
 
-
+@login_required
 def gerenciar_evento(request):
     if request.method == "GET":
 
@@ -58,7 +58,17 @@ def gerenciar_evento(request):
         nome_filtro = request.GET.get('nome')
         eventos = Evento.objects.filter(criador=request.user)
 
+        # TODO  fazer outros filtros
         if nome_filtro:
             eventos = eventos.filter(nome__contains=nome_filtro)
-        print(eventos)
+        
         return render(request, 'gerenciar_evento.html', {'eventos':eventos})
+
+
+@login_required
+def inscrever_evento(request, id):
+		# Validar login
+    evento = get_object_or_404(Evento, id=id)
+    if request.method == "GET":
+        return render(request, 'inscrever_evento.html', {'evento': evento})
+    
