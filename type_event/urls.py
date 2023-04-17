@@ -13,6 +13,9 @@ urlpatterns = [
 
     path('eventos/', include('eventos.urls')),
     path('cliente/', include('cliente.urls')),
+
+    path('logout/', include('usuarios.urls')),
+
     
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
