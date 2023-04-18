@@ -42,12 +42,20 @@ def cadastro(request):
         if user.exists():
             messages.add_message(request, constants.ERROR, 'Usuario já existe')
             return redirect(reverse('cadastro'))   
+        # validação para ver se existe esse email no banco ja
+        email = User.objects.filter(email=email)
+        if email.exists():
+            messages.add_message(request, constants.WARNING, 'Email já utilizado')
+            return render(request, 'cadastro.html', {'nome': username, 'senha': senha, 'confirmar_senha': confirmar_senha})
 
         user = User.objects.create_user(username=username, email=email, password=senha)
         messages.add_message(request, constants.SUCCESS, 'Usuario cadastrado com sucesso!')
         user.save()
         return redirect(reverse('login'))
     
+        
+
+
 
 def login(request):
     if request.method == "GET":
