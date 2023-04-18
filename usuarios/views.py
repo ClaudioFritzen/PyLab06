@@ -36,10 +36,10 @@ def cadastro(request):
             messages.add_message(request, constants.WARNING, 'Email já utilizado')
             return render(request, 'cadastro.html', {'nome': username, 'senha': senha, 'confirmar_senha': confirmar_senha})
         ## Fazer a validação de força da senha 
-        if len(senha) >= 8:
+        if len(senha) <= 8:
             messages.add_message(request, constants.WARNING, 'Senha precisa ser maior que 8 caractes')
-            return render(request, 'cadastro.html')
-        print(senha)
+            return render(request,'cadastro.html', {'nome': username, 'email': email})
+        
 
         if not (senha == confirmar_senha): 
             messages.add_message(request, constants.ERROR, 'Senhas diferentes')   
