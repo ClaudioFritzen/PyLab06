@@ -18,12 +18,24 @@ def cadastro(request):
         confirmar_senha = request.POST.get('confirmar_senha')
 
         #### Validações
+        
+        # validaçao dos campos nao podem estar vazio
+        if len(username.strip()) == 0 or len(email.strip()) == 0 or len(senha.strip()) == 0 or len(confirmar_senha.strip()) == 0:
+            messages.add_message(request, constants.ERROR, 'Exitem campos vazios')
+            return redirect(reverse('cadastro'))
+        
+        ## Fazer a validação de força da senha 
+        if len(senha) >= 8:
+            messages.add_message(request, constants.WARNING, 'Senha precisa ser maior que 8 caractes')
+            return render(request, 'cadastro.html')
+        print(senha)
 
         if not (senha == confirmar_senha): 
             messages.add_message(request, constants.ERROR, 'Senhas diferentes')   
             return redirect(reverse('cadastro'))
         
-        ## Fazer a validação de força da senha 
+        
+
 
         user = User.objects.filter(username=username)
 
