@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.models import User
 
@@ -11,6 +11,14 @@ from django.contrib.auth import authenticate, login, logout
 
 
 def cadastro(request):
+
+    ## Atenticação de ususario
+    if request.user.is_authenticated:
+        ## mensagem de alerta
+        messages.add_message(request, constants.WARNING, 'Não é possivél acessar essa URL logado.')
+        return redirect('/eventos/novo_evento/')
+
+
     if request.method == "GET":
         return render(request, 'cadastro.html')
     elif request.method == "POST":
@@ -58,6 +66,13 @@ def cadastro(request):
 
 
 def login(request):
+
+    ## Atenticação de ususario
+    if request.user.is_authenticated:
+        ## mensagem de alerta
+        messages.add_message(request, constants.WARNING, 'Não é possivél acessar essa URL logado.')
+        return redirect('/eventos/novo_evento/')
+
     if request.method == "GET":
         return render(request, 'login.html')
     elif request.method == "POST":
