@@ -26,6 +26,7 @@ from io import BytesIO
 
 import sys
 ###
+import datetime
 
 @login_required
 
@@ -40,10 +41,19 @@ def novo_evento(request):
         nome = request.POST.get('nome')
         descricao = request.POST.get('descricao')
 
+        nome = nome.strip()
         if len(nome) <=5:
             messages.add_message(request, constants.ERROR,
                                  'Nome deve ter mais que 5 caractes')
-            print(nome)
+            return redirect('/eventos/novo_evento/')
+            
+        descricao = descricao.strip()
+        if len(descricao) <=10:
+            messages.add_message(request, constants.ERROR,
+                                 'Nome deve ter mais que 5 caractes')
+            return redirect('/eventos/novo_evento/')
+
+
 
         data_inicio = request.POST.get('data_inicio')
         data_termino = request.POST.get('data_termino')
@@ -67,7 +77,7 @@ def novo_evento(request):
                         constants.ERROR,
                         'A logo da empresa deve ter menos de 10MB',
                     )
-                    return redirect('/home/nova_empresa')
+                    return redirect('/eventos/novo_evento/')
             else:
                 # Se o logo estiver vazio, defina como None
                 logo = None
@@ -79,7 +89,19 @@ def novo_evento(request):
         #nova_empresa.logo = logo
         #nova_empresa.save()
 
+        #### Tratando o erro de quando salvamos vazio a data de inicio
+        if not data_inicio:
+            data_inicio = datetime.date.today()
 
+        if not data_termino:
+            data_termino = datetime.date.today()
+
+        if len(carga_horaria) <=0:
+            messages.add_message(request, constants.WARNING, 'Insira uma carga horaria!')
+            
+            return redirect('/eventos/novo_evento/')
+
+        
 
         evento = Evento(
             criador=request.user,
