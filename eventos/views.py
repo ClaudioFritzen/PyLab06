@@ -39,6 +39,12 @@ def novo_evento(request):
     elif request.method == "POST":
         nome = request.POST.get('nome')
         descricao = request.POST.get('descricao')
+
+        if len(nome) <=5:
+            messages.add_message(request, constants.ERROR,
+                                 'Nome deve ter mais que 5 caractes')
+            print(nome)
+
         data_inicio = request.POST.get('data_inicio')
         data_termino = request.POST.get('data_termino')
         carga_horaria = request.POST.get('carga_horaria')
@@ -49,6 +55,32 @@ def novo_evento(request):
         
         logo = request.FILES.get('logo')
         
+
+        ## UTILIZANDO O CHAT GPT PARA MELHORAR O NOSSO CODIGO
+         # tamanho da img que pode ser recebida
+        if 'logo' in request.FILES:
+            logo = request.FILES['logo']    
+            if logo:
+                if logo.size > 100_000_000:
+                    messages.add_message(
+                        request,
+                        constants.ERROR,
+                        'A logo da empresa deve ter menos de 10MB',
+                    )
+                    return redirect('/home/nova_empresa')
+            else:
+                # Se o logo estiver vazio, defina como None
+                logo = None
+        else:
+            # Se a chave 'logo' não estiver em request.FILES, defina logo como None
+            logo = None
+        
+        # Salvar o logo (mesmo que seja None)
+        #nova_empresa.logo = logo
+        #nova_empresa.save()
+
+
+
         evento = Evento(
             criador=request.user,
             nome=nome,
